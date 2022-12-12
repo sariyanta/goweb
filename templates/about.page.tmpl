@@ -3,4 +3,6 @@
 {{ define "content" }}
     <h1>Home</h1>
     <p>Welcome to the home page!</p>
+
+    <p>This came from the template: {{ index .StringMap "test" }}</p>
 {{ end }}

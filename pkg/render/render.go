@@ -8,11 +8,16 @@ import (
 	"text/template"
 
 	"github.com/sariyanta/goweb/pkg/config"
+	"github.com/sariyanta/goweb/pkg/models"
 )
 
 var app *config.AppConfig
 
-func RenderTemplate(w http.ResponseWriter, tmpl string) {
+func AppDefaultData(td *models.TemplateData) *models.TemplateData {
+	return td
+}
+
+func RenderTemplate(w http.ResponseWriter, tmpl string, td *models.TemplateData) {
 	var tc map[string]*template.Template
 	//  get the template cache from the app config
 	if app.UseCache {
@@ -29,7 +34,9 @@ func RenderTemplate(w http.ResponseWriter, tmpl string) {
 
 	buff := new(bytes.Buffer)
 
-	_ = t.Execute(buff, nil)
+	td = AppDefaultData(td)
+
+	_ = t.Execute(buff, td)
 
 	// render the template
 	_, err := buff.WriteTo(w)
