@@ -6,30 +6,33 @@ import (
 	"net/http"
 	"path/filepath"
 	"text/template"
+
+	"github.com/sariyanta/goweb/pkg/config"
 )
 
-func RenderTemplate(w http.ResponseWriter, tmpl string) {
-	//  get the template cache from the app config
+var app *config.AppConfig
 
-	tc, err := CreateTemplateCache()
-	if err != nil {
-		log.Fatal(err)
+func RenderTemplate(w http.ResponseWriter, tmpl string) {
+	var tc map[string]*template.Template
+	//  get the template cache from the app config
+	if app.UseCache {
+		tc = app.TemplateCache
+	} else {
+		tc, _ = CreateTemplateCache()
 	}
+
 	// get requested template from cache
 	t, ok := tc[tmpl]
 	if !ok {
-		log.Fatal(err)
+		log.Fatal("Could not get template from template cache")
 	}
 
 	buff := new(bytes.Buffer)
 
-	err = t.Execute(buff, nil)
-	if err != nil {
-		log.Println(err)
-	}
+	_ = t.Execute(buff, nil)
 
 	// render the template
-	_, err = buff.WriteTo(w)
+	_, err := buff.WriteTo(w)
 	if err != nil {
 		log.Println(err)
 	}
@@ -72,4 +75,8 @@ func CreateTemplateCache() (map[string]*template.Template, error) {
 	}
 
 	return templateCache, nil
+}
+
+func NewTemplates(a *config.AppConfig) {
+	app = a
 }

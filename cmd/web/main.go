@@ -21,9 +21,15 @@ func main() {
 	}
 
 	app.TemplateCache = tc
+	app.UseCache = false
 
-	http.HandleFunc("/", handlers.Home)
-	http.HandleFunc("/about", handlers.About)
+	repo := handlers.NewRepo(&app)
+	handlers.NewHandlers(repo)
+
+	render.NewTemplates(&app)
+
+	http.HandleFunc("/", handlers.Repo.Home)
+	http.HandleFunc("/about", handlers.Repo.About)
 
 	fs := http.FileServer(http.Dir("./static/"))
 	http.Handle("/static/", http.StripPrefix("/static", fs))
