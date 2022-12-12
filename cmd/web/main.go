@@ -28,9 +28,6 @@ func main() {
 
 	render.NewTemplates(&app)
 
-	fs := http.FileServer(http.Dir("./static/"))
-	http.Handle("/static/", http.StripPrefix("/static", fs))
-
 	fmt.Println("Server is running on port", PORT)
 
 	srv := &http.Server{
