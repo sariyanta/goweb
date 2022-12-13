@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/alexedwards/scs/v2"
 	"github.com/sariyanta/goweb/pkg/config"
 	"github.com/sariyanta/goweb/pkg/handlers"
 	"github.com/sariyanta/goweb/pkg/render"
@@ -12,8 +13,20 @@ import (
 
 const PORT = ":8080"
 
+var app config.AppConfig
+var session *scs.SessionManager
+
 func main() {
-	var app config.AppConfig
+	// Change this to true when in production
+	app.InProduction = false
+
+	session = scs.New()
+	session.Lifetime = 24 * 60 * 60 * 365
+	session.Cookie.Persist = true
+	session.Cookie.SameSite = http.SameSiteLaxMode
+	session.Cookie.Secure = false
+
+	app.Session = session
 
 	tc, err := render.CreateTemplateCache()
 	if err != nil {
