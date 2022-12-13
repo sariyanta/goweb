@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/alexedwards/scs/v2"
 	"github.com/sariyanta/goweb/pkg/config"
@@ -21,10 +22,10 @@ func main() {
 	app.InProduction = false
 
 	session = scs.New()
-	session.Lifetime = 24 * 60 * 60 * 365
+	session.Lifetime = 24 * time.Hour
 	session.Cookie.Persist = true
 	session.Cookie.SameSite = http.SameSiteLaxMode
-	session.Cookie.Secure = false
+	session.Cookie.Secure = app.InProduction
 
 	app.Session = session
 
