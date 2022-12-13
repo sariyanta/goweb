@@ -15,8 +15,14 @@
     </head>
 
     <body>
-        {{ block "content" .}}
+        {{ block "navigation" .}}
         {{ end }}
+        <div class="max-w-5xl mx-auto isolate">
+            {{ block "content" .}}
+
+            {{ end }}
+        </div>
+
 
         {{ block "scripts" .}}
         {{ end }}
